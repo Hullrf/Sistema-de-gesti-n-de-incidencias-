@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}Incidencia #{{ incident.id }} – Mesa de Ayuda{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card shadow-sm">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">
+          <i class="bi bi-ticket-detailed me-2 text-primary"></i>Incidencia #{{ incident.id }}
+        </h5>
+        {% if incident.status.value == 'Pendiente' %}
+          <span class="badge bg-warning text-dark fs-6">{{ incident.status.value }}</span>
+        {% elif incident.status.value == 'En proceso' %}
+          <span class="badge bg-primary fs-6">{{ incident.status.value }}</span>
+        {% else %}
+          <span class="badge bg-success fs-6">{{ incident.status.value }}</span>
+        {% endif %}
+      </div>
+      <div class="card-body p-4">
+        <h4>{{ incident.title }}</h4>
+        <hr>
+        <p class="text-muted mb-1">
+          <i class="bi bi-calendar3 me-1"></i>
+          Creada el {{ incident.created_at.strftime('%d/%m/%Y a las %H:%M') }} UTC
+        </p>
+        <p class="text-muted mb-3">
+          <i class="bi bi-person me-1"></i>
+          Registrada por <strong>{{ incident.owner.username }}</strong>
+        </p>
+        <h6 class="fw-semibold">Descripción</h6>
+        <p class="bg-light rounded p-3">{{ incident.description }}</p>
+      </div>
+      <div class="card-footer d-flex gap-2">
+        <a href="{{ url_for('incidents.edit', id=incident.id) }}" class="btn btn-outline-warning">
+          <i class="bi bi-pencil me-1"></i>Editar
+        </a>
+        {% if current_user.is_admin %}
+        <form method="POST" action="{{ url_for('incidents.delete', id=incident.id) }}"
+              onsubmit="return confirm('¿Eliminar esta incidencia?')">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="btn btn-outline-danger">
+            <i class="bi bi-trash me-1"></i>Eliminar
+          </button>
+        </form>
+        {% endif %}
+        <a href="{{ url_for('incidents.list') }}" class="btn btn-outline-secondary ms-auto">
+          <i class="bi bi-arrow-left me-1"></i>Volver
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

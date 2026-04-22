@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard – Mesa de Ayuda{% endblock %}
+
+{% block content %}
+<h4 class="mb-4"><i class="bi bi-bar-chart-fill me-2 text-primary"></i>Dashboard</h4>
+
+<!-- Summary cards -->
+<div class="row g-3 mb-4" id="summary-cards">
+  <div class="col-6 col-md-3">
+    <div class="card text-white bg-secondary h-100">
+      <div class="card-body text-center">
+        <div class="display-6 fw-bold" id="total-count">–</div>
+        <div class="small mt-1">Total</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="card text-dark bg-warning h-100">
+      <div class="card-body text-center">
+        <div class="display-6 fw-bold" id="pendiente-count">–</div>
+        <div class="small mt-1">Pendiente</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="card text-white bg-primary h-100">
+      <div class="card-body text-center">
+        <div class="display-6 fw-bold" id="enproceso-count">–</div>
+        <div class="small mt-1">En proceso</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="card text-white bg-success h-100">
+      <div class="card-body text-center">
+        <div class="display-6 fw-bold" id="resuelto-count">–</div>
+        <div class="small mt-1">Resuelto</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Charts -->
+<div class="row g-3">
+  <div class="col-md-7">
+    <div class="card shadow-sm h-100">
+      <div class="card-header fw-semibold">Incidencias por estado (barras)</div>
+      <div class="card-body">
+        <canvas id="barChart" style="max-height:300px"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-5">
+    <div class="card shadow-sm h-100">
+      <div class="card-header fw-semibold">Distribución (pastel)</div>
+      <div class="card-body d-flex align-items-center justify-content-center">
+        <canvas id="pieChart" style="max-height:300px"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mt-3 text-end">
+  <a href="{{ url_for('incidents.list') }}" class="btn btn-outline-primary btn-sm">
+    <i class="bi bi-list-ul me-1"></i>Ver todas las incidencias
+  </a>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+{% endblock %}
