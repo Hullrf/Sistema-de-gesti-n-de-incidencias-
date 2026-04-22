@@ -3,8 +3,9 @@ from flask_login import login_user, logout_user, login_required, current_user
 from urllib.parse import urlsplit
 
 from app.auth import bp
-from app.auth.forms import LoginForm
+from app.auth.forms import LoginForm, RegisterForm
 from app.models.user import User
+from app.extensions import db
 
 
 @bp.route('/login', methods=['GET', 'POST'])
@@ -35,3 +36,20 @@ def logout():
     logout_user()
     flash('Sesión cerrada exitosamente.', 'info')
     return redirect(url_for('auth.login'))
+
+
+@bp.route('/register', methods=['GET', 'POST'])
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('incidents.list'))
+
+    form = RegisterForm()
+    if form.validate_on_submit():
+        user = User(username=form.username.data, role='user')
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash('Cuenta creada exitosamente. Ahora puedes iniciar sesión.', 'success')
+        return redirect(url_for('auth.login'))
+
+    return render_template('auth/register.html', form=form)
